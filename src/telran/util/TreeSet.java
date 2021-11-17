@@ -54,6 +54,7 @@ public TreeSet() {
 		return mostLeftNode;
 	}
 	
+	// V.R. Can you do the same without Comparator?
 	private Node<T> getFirstGreaterParent(Node<T> node) {
 		Node<T> parentNode = node;
 		int resComp = -100;
@@ -113,7 +114,7 @@ public TreeSet() {
 	public T remove(T pattern) {
 		// TODO next HW
 		return null;
-	}
+	} 
 
 	
 
