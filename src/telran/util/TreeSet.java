@@ -48,6 +48,7 @@ public TreeSet() {
 	 
 	private Node<T> getMostLeftNode(Node<T> node) {
 		Node<T> mostLeftNode = node;
+		//[YG] since this method is the private, you may not check on each iteration mostLeftNode on null, as this check should be at the method call
 		while (mostLeftNode != null && mostLeftNode.left != null) {
 			mostLeftNode = mostLeftNode.left;
 		}
@@ -58,6 +59,7 @@ public TreeSet() {
 		Node<T> parentNode = node;
 		int resComp = -100;
 		while(parentNode != null && resComp <= 0) {
+			//[YG] This good but think how to avoid "compare" call at all
 			resComp = ((Comparator<T>)comp).compare(parentNode.obj, node.obj);
 			if(resComp <= 0) {
 				parentNode = parentNode.parent;
