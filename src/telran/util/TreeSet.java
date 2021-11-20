@@ -55,7 +55,7 @@ public TreeSet() {
 	}
 	@Override 
 	public void remove() {
-		//
+		//[YG] 1. Why don't you use removeNode; 2. It won't work in the case previous is a junction, because in this case you actually remove current not previous (think why)
 		TreeSet.this.remove(previous.obj);
 		
 	}
@@ -130,8 +130,10 @@ public TreeSet() {
 	}
 	private void removeNonJunctionNode(Node<T> removedNode) {
 		if(removedNode == root) {
-			removedNode.parent = null;
+			removedNode.parent = null; //[Yg] no sense as being removed root has null in any case
 			root = removedNode.right == null ? removedNode.left : removedNode.right;
+			//[YG] not found setting null to new root
+			//[YG] obviously the tests pass because we don't have the test for removing such root
 		} else {
 			// Get parent and child
 			Node<T> parent = removedNode.parent;
