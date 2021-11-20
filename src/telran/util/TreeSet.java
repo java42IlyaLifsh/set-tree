@@ -109,66 +109,89 @@ public TreeSet() {
 		if (removedNode == null) {
 			return null;
 		}
- 		removeNodeSubst(removedNode);
+		
+// MUST CASE STR-115 or STR-117		
+		
+		removeNodeSubst(removedNode);
+
 // 		removeNodeClassWork(removedNode);
 		return removedNode.obj;
 	}
 
-	private void removeNodeSubst (Node <T> removedNode) {
-	if (removedNode.left!=null && removedNode.right!=null) {
-		//This is Junction!!!!
-		removeJunctionNode (removedNode);
-	} else {
-		//it's not junction or leaf
-		removeNoJunctionNode (removedNode);
+	private void removeNodeSubst(Node<T> removedNode) {
+		if(removedNode.left != null && removedNode.right != null) {
+			// Junction
+			removeJunctionNode(removedNode);
+		} else {
+			// non-junction/Leaf
+			removeNonJunctionNode(removedNode);
+		}	
+		size--;
 	}
-	}
-private void removeNoJunctionNode (Node<T> removedNode) {
-	// check root / not root
-	if (removedNode == root) {
-		removedNode.parent = null;
-		root = removedNode.right == null ? removedNode.left : removedNode.right;
-	} else {
-		//connect parent and child
-		Node<T> parent = removedNode.parent;
-		Node<T> child = removedNode.right == null ? removedNode.left : removedNode.right;
-		if (parent.right==removedNode) {
-			parent.right=child;
-		}else {	parent.left=child;}
-		if (child !=null) {child.parent = parent;}
-
-	}
-}
-	
-private void removeJunctionNode (Node<T> removedNode) {
-	// Search substNode is most left from right
-	Node<T> substitutionNode = getMostLeftFrom(removedNode.right); 
-	// Check root or not root
-	if (removedNode != root) {
-		Node<T> parent = removedNode.parent;
-		if (parent.right == removedNode) {
-			parent.right = substitutionNode;
+	private void removeNonJunctionNode(Node<T> removedNode) {
+		if(removedNode == root) {
+			removedNode.parent = null;
+			root = removedNode.right == null ? removedNode.left : removedNode.right;
+		} else {
+			// Get parent and child
+			Node<T> parent = removedNode.parent;
+			Node<T> child = removedNode.right == null ? removedNode.left : removedNode.right;
+			// Connect parent with child
+			if (parent.right == removedNode) {
+				parent.right = child;				
 			} else {
-			parent.left = substitutionNode; 
+				parent.left = child;
 			}
-			substitutionNode.parent = parent;	
-	} else {
+			// Connect child with parent
+			if (child != null) {
+				child.parent = parent;
+			}
+		}
+	} 
+	
+	private void removeJunctionNode(Node<T> removedNode) {
+		// A substitution is the most left node from the right 
+		// subtree of the being removed node
+		Node<T> substitutionNode = getMostLeftFrom(removedNode.right);
+		// Junction should replace its reference to object with 
+		// the reference from the substitution
+		removedNode.obj = substitutionNode.obj;
+		removedNode.right = substitutionNode.right;
+		Node<T> parent = substitutionNode.parent;
+		
+		
+//   I don't understand, maybe variant, then the substitutionNode has a parent on the left or only on the right (variant zig-zag) ??????????
+		
+		
+		if (parent.right==substitutionNode) {parent.right = null;}
+		if (parent.left==substitutionNode) {parent.left = null;}
 		substitutionNode.parent = null;
-		root = substitutionNode;
+		// if  remove root must doing additional simple steps;
+		if (removedNode == root) {
+		root.right = substitutionNode.right;
+		root.obj=substitutionNode.obj;
+		root.parent=null;
+		}
 	}
 	
-	substitutionNode.left = removedNode.left;
-	substitutionNode.right = removedNode.right;
-	
-	if(substitutionNode.right != null) {
-			substitutionNode.right.parent = substitutionNode;	
+	/*   no method needed
+	  
+	private void removeRootJunction() {
+		//update the method by applying another algorithm (see slide 28)
+		// Get child node with preference to the right branch
+		Node<T> child = root.right;
+		// Disconnect child from parent node
+		child.parent = null;
+		Node<T> parentLeft = getMostLeftFrom(root.right);
+		parentLeft.left = root.left;
+		root.left.parent = parentLeft;
+		root = child;
 	}
-	if(substitutionNode.left != null) {
-		substitutionNode.left.parent = substitutionNode;	
-	}
-}
+	*/
+
+
 	
- 	
+	@SuppressWarnings("unused")
 	
 	private void removeNodeClassWork(Node<T> removedNode) {
 		//update the method by applying another algorithm
