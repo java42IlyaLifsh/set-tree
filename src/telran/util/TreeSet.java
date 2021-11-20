@@ -168,7 +168,7 @@ private void removeJunctionNode (Node<T> removedNode) {
 	}
 }
 	
-	
+ 	
 	
 	private void removeNodeClassWork(Node<T> removedNode) {
 		//update the method by applying another algorithm
